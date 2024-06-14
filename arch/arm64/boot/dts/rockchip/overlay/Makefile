@@ -34,6 +34,6 @@ dtbotxt-$(CONFIG_ARCH_ROCKCHIP) += \
 
 targets += $(dtbo-y) $(scr-y) $(dtbotxt-y)
 
-always			:= $(dtbo-y) $(scr-y) $(dtbotxt-y)
-clean-files		:= *.dtbo *.scr
+always-y		:= $(dtbo-y) $(scr-y) $(dtbotxt-y)
+clean-files		:= *.dtbo 
 
