@@ -42,29 +42,7 @@
 		regulator-max-microvolt = <12000000>;
 	};
 	
-//	rk809_sound: rk809-sound  {
-//		status = "okay";
-//		compatible = "simple-audio-card";
-//		simple-audio-card,format = "i2s";
-//		simple-audio-card,name = "rockchip,rk809-codec";
-//		simple-audio-card,mclk-fs = <256>;
-//		simple-audio-card,widgets =
-//		"Microphone", "Mic Jack",
-//		"Headphone", "Headphone Jack";
-//		simple-audio-card,routing =
-//		"Mic Jack", "MICBIAS1",
-//		"IN1R", "Mic Jack",
-//		"Headphone Jack", "HPOL",
-//		"Headphone Jack", "HPOR";
-//		simple-audio-card,cpu {
-//			sound-dai = <&i2s1_8ch>;
-//		};
-//		simple-audio-card,codec {
-//			sound-dai = <&rk809_codec>;
-//		};
-//	};
-
-	rk809_sound: rk809-sound {
+	rk809_sound: rk809-sound  {
 		status = "okay";
 		compatible = "simple-audio-card";
 		simple-audio-card,format = "i2s";
@@ -79,17 +57,6 @@
 		};
 	};
 	
-//	rk809_sound: rk809-sound {
-//		status = "okay";
-//		compatible = "rockchip,multicodecs-card";
-//		rockchip,card-name = "rockchip-rk809";
-//		rockchip,format = "i2s";
-//		rockchip,mclk-fs = <256>;
-//		rockchip,cpu = <&i2s1_8ch>;
-//		rockchip,codec = <&rk809_codec>;
-//		
-//	};
-		
 	bt-sound {
 	
 		compatible = "simple-audio-card";
@@ -368,49 +335,22 @@
 	
 	
 //	##############
-//wireless_bluetooth: wireless-bluetooth {
-//    compatible = "bluetooth-platdata";
-//    clocks = <&rk809 1>;
-//    clock-names = "ext_clock";
-//    uart_rts_gpios = <&gpio2 RK_PB5 GPIO_ACTIVE_LOW>;
-//    pinctrl-names = "default", "rts_gpio";
-//    pinctrl-0 = <&uart1m0_rtsn>;
-//    pinctrl-1 = <&uart1_rts_gpio>;
-//    BT,reset_gpio    = <&gpio2 RK_PB7 GPIO_ACTIVE_HIGH>;
-//    BT,wake_gpio     = <&gpio2 RK_PC1 GPIO_ACTIVE_HIGH>;
-//    BT,wake_host_irq = <&gpio2 RK_PC0 GPIO_ACTIVE_HIGH>;
-//    status = "okay";
-//};
-
 wireless_bluetooth: wireless-bluetooth {
     compatible = "bluetooth-platdata";
     clocks = <&rk809 1>;
     clock-names = "ext_clock";
     uart_rts_gpios = <&gpio2 RK_PB5 GPIO_ACTIVE_LOW>;
     pinctrl-names = "default", "rts_gpio";
-    pinctrl-0 = <&uart1m0_rtsn>;
+    pinctrl-0 = <&uart1m0_rtsn
+        &bt_host_wake_gpio
+        &bt_poweren
+        &bt_host_wake_irq>;
     pinctrl-1 = <&uart1_rts_gpio>;
     BT,reset_gpio    = <&gpio2 RK_PB7 GPIO_ACTIVE_HIGH>;
     BT,wake_gpio     = <&gpio2 RK_PC1 GPIO_ACTIVE_HIGH>;
     BT,wake_host_irq = <&gpio2 RK_PC0 GPIO_ACTIVE_HIGH>;
     status = "okay";
 };
-
-//bt_uart1: wireless_bluetooth: wireless-bluetooth {
-//	compatible = "bluetooth-platdata";
-//	clocks = <&rk809 1>;
-//	clock-names = "ext_clock";
-//	//wifi-bt-power-toggle;
-//	uart_rts_gpios = <&gpio2 RK_PB1 GPIO_ACTIVE_LOW>;
-//	pinctrl-names = "default", "rts_gpio";
-//	pinctrl-0 = <&uart1m0_rtsn>;
-//	pinctrl-1 = <&uart1_gpios>;
-//	BT,reset_gpio    = <&gpio4 RK_PB2 GPIO_ACTIVE_HIGH>;	//BT_REG_ON_H
-//	BT,wake_gpio     = <&gpio4 RK_PB5 GPIO_ACTIVE_HIGH>;	//HOST_WAKE_BT_H
-//	BT,wake_host_irq = <&gpio4 RK_PB4 GPIO_ACTIVE_HIGH>;	//BT_WAKE_HOST_H
-//	status = "okay";
-//};
-
 	
 //	##################
 aliases {
@@ -1517,7 +1457,7 @@ gpio-keys {
 			};
 
 		};
-		
+
 		port@1 {
 			reg = <1>;
 			#address-cells = <1>;
@@ -1527,6 +1467,7 @@ gpio-keys {
 				reg = <1>;
 				remote-endpoint = <&isp0_in>;
 			};
+
 		};
 		
 		port@2 {
@@ -1536,10 +1477,9 @@ gpio-keys {
 
 			mipi_in_ucam1: endpoint@1 {
 				reg = <1>;
-			//	remote-endpoint = <&imx219_out>;  //imx219
+				remote-endpoint = <&imx219_out>;  //imx219
 				data-lanes = <1 2>;
 			};
-
 		};
 	};
 };
@@ -1598,6 +1538,12 @@ gpio-keys {
 		power-domains = <&power RK3568_PD_VI>;
 		pwdn-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_LOW>;
 		dsensor-gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_LOW>;
+		rockchip,camera-module-index = <1>;
+		rockchip,camera-module-facing = "front";
+		rockchip,camera-module-name = "LMM248";
+		rockchip,camera-module-lens-name = "YXC-M804A2";
+		
+		
 		port {
 			ov5647_out: endpoint {
 				remote-endpoint =<&mipi_in_ucam0>;//split:dphy1_in full: mipi_in_ucam0
@@ -1607,25 +1553,24 @@ gpio-keys {
 	};
 	
 	imx219@10 {
-		status = "okay";  //
+		status = "okay";  
 		compatible = "sony,imx219";
 		reg = <0x10>;
 		clocks = <&ext_cam_clk_imx219>;
 		clock-names = "ext_cam_clk_imx219";
-	
-		pwdn-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_LOW>;
-		dsensor-gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_LOW>;				
 		rockchip,camera-module-index = <1>;
 		rockchip,camera-module-facing = "front";
 		rockchip,camera-module-name = "rpi-camera-v2";
 		rockchip,camera-module-lens-name = "default";
+		pwdn-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_LOW>;
+		dsensor-gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_LOW>;				
 
-//		port {
-//			imx219_out: endpoint {
-//				remote-endpoint = <&mipi_in_ucam1>;
-//				data-lanes = <1 2>;
-//			};
-//		};
+		port {
+			imx219_out: endpoint {
+				remote-endpoint = <&mipi_in_ucam1>;
+				data-lanes = <1 2>;
+			};
+		};
 	
 	};
 	
