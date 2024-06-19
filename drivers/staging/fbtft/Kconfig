@@ -200,3 +200,6 @@ config FB_TFT_UPD161704
 	depends on FB_TFT
 	help
 	  Generic Framebuffer support for uPD161704
+config FB_TFT_FBTFT_ST7796S
+	tristate "Module to for adding FBTFT devices"
+	depends on FB_TFT
