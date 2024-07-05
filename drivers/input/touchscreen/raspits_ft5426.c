@@ -276,7 +276,7 @@ input_allocate_failed:
 	return ret;
 }
 
-static int raspits_ft5426_remove(struct i2c_client *client)
+static void raspits_ft5426_remove(struct i2c_client *client)
 {
 	struct raspits_ft5426_data *ts_data = i2c_get_clientdata(client);
 
@@ -286,17 +286,17 @@ static int raspits_ft5426_remove(struct i2c_client *client)
 		input_free_device(ts_data->input_dev);
 	}
 	kfree(ts_data);
-	return 0;
+
 }
 
 static const struct i2c_device_id raspits_ft5426_id[] = {
-	{ "raspits_ft5426", 0 },
+	{ "rockpi_ft5406", 0 },
 	{ },
 };
 
 static struct i2c_driver raspits_ft5426_driver = {
 	.driver = {
-		.name = "raspits_ft5426",
+		.name = "rockpi_ft5406",
 	},
 	.probe = raspits_ft5426_probe,
 	.remove = raspits_ft5426_remove,
