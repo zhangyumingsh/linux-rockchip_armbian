@@ -4,34 +4,24 @@
 / {
 	
 	fragment@0 {
-		target = <&route_dsi1>;
+		target = <&video_phy1>;
 
 		__overlay__ {
 			
 			status = "okay";
-			connect = <&vp0_out_dsi1>;		
 		};
 	};
 	
 	fragment@1 {
-		target = <&video_phy1>;
+		target = <&dsi1_in_vp1>;
 
 		__overlay__ {
 			
 			status = "okay";			
 		};
 	};
-	
-	fragment@2 {
-		target = <&dsi1_in_vp0>;
-
-		__overlay__ {
-			
-			status = "okay";	
-		};
-	};
 		
-	fragment@3 {
+	fragment@2 {
 		target = <&dsi1>;
 
 		__overlay__ {
@@ -40,7 +30,7 @@
 		};
 	};
 	
-	fragment@4 {
+	fragment@3 {
 		target = <&dsi1_panel>;
 
 		__overlay__ {
@@ -49,16 +39,7 @@
 		};
 	};
 	
-	fragment@5 {
-		target = <&panel_in_dsi1>;
-
-		__overlay__ {
-			
-			status = "okay";			
-		};
-	};
-	
-	fragment@6 {
+	fragment@4 {
 		target = <&route_hdmi>;
 
 		__overlay__ {
@@ -67,5 +48,15 @@
 			connect = <&vp0_out_hdmi>;             		
 		};
 	};
+	
+	fragment@5 {
+		target = <&route_dsi1>;
+
+		__overlay__ {
 			
+			status = "okay";
+			connect = <&vp1_out_dsi1>;             		
+		};
+	};
+	
 };
