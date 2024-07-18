@@ -497,11 +497,12 @@ static void panel_simple_wait(ktime_t start_ktime, unsigned int min_ms)
 	if (ktime_before(now_ktime, min_ktime))
 		panel_simple_msleep(ktime_to_ms(ktime_sub(min_ktime, now_ktime)) + 1);
 }
-
+extern void rockpi_mcu_screen_power_up(void);
+extern int rockpi_mcu_set_bright(int bright);
 static int panel_simple_regulator_enable(struct panel_simple *p)
 {
 	int err;
-
+	rockpi_mcu_screen_power_up();
 	if (p->power_invert) {
 		if (regulator_is_enabled(p->supply) > 0)
 			regulator_disable(p->supply);
@@ -510,14 +511,14 @@ static int panel_simple_regulator_enable(struct panel_simple *p)
 		if (err < 0)
 			return err;
 	}
-
+	rockpi_mcu_set_bright(0xFF);
 	return 0;
 }
 
 static int panel_simple_regulator_disable(struct panel_simple *p)
 {
 	int err;
-
+	rockpi_mcu_set_bright(0x00);
 	if (p->power_invert) {
 		if (!regulator_is_enabled(p->supply)) {
 			err = regulator_enable(p->supply);
