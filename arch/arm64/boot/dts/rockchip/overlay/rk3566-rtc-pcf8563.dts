@@ -6,24 +6,14 @@
 #include <dt-bindings/power/rk3568-power.h>
 #include <dt-bindings/interrupt-controller/irq.h>
 
-/ {
-		
+/ {		
 	fragment@0 {
-		target = <&spi1>;
+		target = <&rtc_pcf8563>;
 
 		__overlay__ {
-			status = "okay";
+			
+			status = "okay";		
 		};
 	};
 	
-	fragment@1 {
-		target = <&spi_dev>;
-
-		__overlay__ {
-			status = "okay";
-		};
-	};
-
-	
-		
-};
+};	

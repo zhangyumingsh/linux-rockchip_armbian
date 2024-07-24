@@ -1218,6 +1218,15 @@ gpio-keys {
 		// dc-gpios  = <&pio 2 14 GPIO_ACTIVE_HIGH>; /* PC14 */
 		dc-gpios  = <&gpio0 RK_PC7 GPIO_ACTIVE_HIGH>;
 	};
+	
+	spi_dev:spi-dev@2{
+		compatible = "spidev";
+		status = "disabled";
+		spi-max-frequency=<10000000>;
+		reg= <2>;
+		spi-cpol;
+		spi-cs-high;
+	};
 };
 
 &spi2 {
@@ -1580,6 +1589,18 @@ gpio-keys {
 		reg = <0x45>;
 		compatible = "rockpi_mcu";
 	
+	};
+	
+	reg_display: regulator@45 {
+		compatible = "raspberrypi,7inch-touchscreen-panel-regulator";
+		reg = <0x45>;
+	};
+	
+	rtc_pcf8563: pcf8563@51 {
+		status = "disabled";
+		compatible = "nxp,pcf8563";
+		reg = <0x51>;
+		#clock-cells = <0>;
 	};
 	
 };

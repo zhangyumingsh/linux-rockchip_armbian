@@ -24,7 +24,8 @@ dtbo-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3566-uart3.dtbo \
 	rk3566-uart5.dtbo \
 	rk3566-uart7.dtbo \
-	rk3566-uart9.dtbo
+	rk3566-uart9.dtbo \
+	rk3566-rtc-pcf8563.dtbo
 
 scr-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3566-fixup.scr
