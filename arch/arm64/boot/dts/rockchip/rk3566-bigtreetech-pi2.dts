@@ -388,19 +388,7 @@ sd_vcc3v3_power: sd-vcc3v3-power {
 	
 	hdmi_sound: hdmi-sound {
 		status = "okay";
-		compatible = "simple-audio-card";
-		simple-audio-card,format = "i2s";
 		simple-audio-card,mclk-fs = <128>;
-		simple-audio-card,name = "rockchip,hdmi";
-		
-		rockchip,jack-det;
-
-		simple-audio-card,cpu {
-				sound-dai = <&i2s0_8ch>;
-		};
-		simple-audio-card,codec {
-				sound-dai = <&hdmi>;
-		};
 	};
 
 
