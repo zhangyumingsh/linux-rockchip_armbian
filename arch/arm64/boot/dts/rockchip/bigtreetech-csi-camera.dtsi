@@ -1,0 +1,172 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2021 Rockchip Electronics Co., Ltd.
+ *
+ */
+
+&csi2_dcphy1 {
+	status = "okay";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipidcphy1_ucam0: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&ov5647_out>;
+				data-lanes = <1 2>;
+			};
+
+			mipidcphy1_ucam1: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&imx219_out>;
+				data-lanes = <1 2>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			csidcphy1_out: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&mipi1_csi2_input>;
+			};
+		};
+	};
+};
+
+&i2c5 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c5m3_xfer>;
+
+	ov5647: ov5647@36 {
+		status = "okay";  
+		compatible = "ovti,ov5647";
+		reg = <0x36>;
+		clocks = <&ext_cam_clk>;
+		clock-names = "ext_cam_ov5647_clk";
+		pwdn-gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
+		rockchip,camera-module-index = <1>;
+		rockchip,camera-module-facing = "front";
+		rockchip,camera-module-name = "LMM248";
+		rockchip,camera-module-lens-name = "YXC-M804A2";
+		
+		port {
+			ov5647_out: endpoint {
+			        remote-endpoint = <&mipidcphy1_ucam0>;
+			        data-lanes = <1 2>;
+			};
+		};
+	};
+
+	imx219: imx219@10 {
+
+		status = "okay";  
+		compatible = "sony,imx219";
+		reg = <0x10>;
+		clocks = <&ext_cam_clk_imx219>;
+		clock-names = "ext_cam_clk_imx219";
+		rockchip,camera-module-index = <1>;
+		rockchip,camera-module-facing = "front";
+		rockchip,camera-module-name = "rpi-camera-v2";
+		rockchip,camera-module-lens-name = "default";
+		pwdn-gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;	
+		
+		port {
+			imx219_out: endpoint {
+			        remote-endpoint = <&mipidcphy1_ucam1>;
+			        data-lanes = <1 2>;
+			};
+		};
+	};
+};
+
+&mipi1_csi2 {
+	status = "okay";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi1_csi2_input: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&csidcphy1_out>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi1_csi2_output: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&cif_mipi_in1>;
+			};
+		};
+	};
+};
+
+&rkcif_mipi_lvds1 {
+	status = "okay";
+
+	port {
+		cif_mipi_in1: endpoint {
+			remote-endpoint = <&mipi1_csi2_output>;
+		};
+	};
+};
+
+&rkcif_mipi_lvds1_sditf {
+	status = "okay";
+
+        port {
+               mipi1_lvds_sditf: endpoint {
+                    remote-endpoint = <&isp1_in0>;
+                };
+        };
+};
+
+&rkisp1_vir1 {
+	status = "okay";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		isp1_in0: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&mipi1_lvds_sditf>;
+		};
+	};
+};
+
+&rkcif{
+	status = "okay";
+};
+
+&rkcif_mmu{
+	status = "okay";
+};
+	
+&rkisp1{
+	status = "okay";
+
+};
+
+&isp1_mmu{
+	status = "okay";
+};

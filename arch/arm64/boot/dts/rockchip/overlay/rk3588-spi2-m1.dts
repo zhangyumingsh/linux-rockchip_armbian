@@ -1,0 +1,15 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+
+	fragment@0 {
+		target = <&spi2>;
+
+		__overlay__ {
+			status = "okay";
+			pinctrl-0 = <&spi2m1_xfer>;
+		};
+	};
+	
+};

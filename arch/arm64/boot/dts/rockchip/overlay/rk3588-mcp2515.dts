@@ -1,0 +1,23 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	
+	fragment@0 {
+		target = <&spi0>;
+
+		__overlay__ {
+			status = "okay";			
+		};
+	};
+	
+	fragment@1 {
+		target = <&can_mcp2515>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+
+};

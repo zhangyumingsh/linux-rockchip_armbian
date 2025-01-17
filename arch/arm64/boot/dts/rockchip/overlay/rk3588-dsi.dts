@@ -1,0 +1,54 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+
+	fragment@0 {
+		target = <&display_subsystem>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@1 {
+		target = <&dsi1>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@2 {
+		target = <&dsi1_panel>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@3 {
+		target = <&dsi1_in_vp3>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@4 {
+		target = <&i2c5>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@5 {
+		target = <&ft5x06>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+};

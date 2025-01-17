@@ -1,0 +1,39 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+		
+	fragment@0 {
+		target = <&spi0>;
+
+		__overlay__ {
+			status = "okay";			
+		};
+	};
+	
+	fragment@1 {
+		target = <&spi_dev>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@2 {
+		target = <&tft_35>;
+
+		__overlay__ {
+			status = "disabled";			
+		};
+	};
+	
+	fragment@3 {
+		target = <&tft_nv3041a>;
+
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+
+	
+};
