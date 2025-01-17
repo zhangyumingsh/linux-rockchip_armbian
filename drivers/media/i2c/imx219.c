@@ -26,7 +26,8 @@
 #include <media/v4l2-image-sizes.h>
 #include <media/v4l2-mediabus.h>
 
-#define DRIVER_VERSION			KERNEL_VERSION(0, 0x01, 0x1)
+#define IMX219_POWER            
+#define DRIVER_VERSION			KERNEL_VERSION(0, 0x01, 0x2)
 
 /* IMX219 supported geometry */
 #define IMX219_TABLE_END		0xffff
@@ -224,6 +225,7 @@ struct imx219 {
 	struct media_pad pad;
 	struct v4l2_ctrl_handler ctrl_handler;
 	struct clk *clk;
+	struct gpio_desc *pwdn_gpio;
 	struct v4l2_rect crop_rect;
 	int hflip;
 	int vflip;
@@ -427,15 +429,27 @@ static int imx219_s_power(struct v4l2_subdev *sd, int on)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(sd);
 	struct imx219 *priv = to_imx219(client);
-
+#ifdef IMX219_POWER
 	if (on)	{
 		dev_dbg(&client->dev, "imx219 power on\n");
 		clk_prepare_enable(priv->clk);
+		
+		if(!IS_ERR(priv->pwdn_gpio)) {
+			gpiod_set_value_cansleep(priv->pwdn_gpio, 0);
+
+			msleep(10);
+		}
 	} else if (!on) {
+
+		if(!IS_ERR(priv->pwdn_gpio)) {
+		gpiod_set_value_cansleep(priv->pwdn_gpio, 1);
+
+		}
+
 		dev_dbg(&client->dev, "imx219 power off\n");
 		clk_disable_unprepare(priv->clk);
 	}
-
+#endif
 	return 0;
 }
 
@@ -1062,6 +1076,17 @@ static int imx219_probe(struct i2c_client *client,
 		return -EPROBE_DEFER;
 	}
 
+#ifdef IMX219_POWER
+
+	priv->pwdn_gpio = devm_gpiod_get(&client->dev, "pwdn", GPIOD_OUT_HIGH);
+	if (IS_ERR(priv->pwdn_gpio))
+		dev_info(&client->dev, "Failed to get pwdn-gpios\n");
+
+	gpiod_set_value_cansleep(priv->pwdn_gpio, 0);
+	
+
+#endif	
+//	msleep(5);
 	/* 1920 * 1080 by default */
 	priv->cur_mode = &supported_modes[1];
 	priv->cfg_num = ARRAY_SIZE(supported_modes);
