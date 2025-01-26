@@ -2,7 +2,7 @@
 dtbo-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3588-dsi.dtbo       \
 	rk3588-mcp2515.dtbo   \
-	rk3588-nv4301a.dtbo    \
+	rk3588-tft_43.dtbo    \
 	rk3588-spi0.dtbo      \
 	rk3588-tft_35.dtbo    \
 	rk3588-hdmi.dtbo      \
