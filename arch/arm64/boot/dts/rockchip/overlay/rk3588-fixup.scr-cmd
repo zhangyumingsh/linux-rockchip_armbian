@@ -118,3 +118,7 @@ if test -n "${tft35_spi_rotate}"; then
 	fdt set /spi@feb00000/st7789v@1 rotate "<${tft35_spi_rotate}>"
 fi
 
+if test -n "${tft43_spi_rotate}"; then
+	fdt set /spi@feb00000/nv3041a@1 rotate "<${tft43_spi_rotate}>"
+fi
+
